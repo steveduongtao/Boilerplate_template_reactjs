@@ -8,10 +8,13 @@
  */
 
 import produce from 'immer';
-import { CHANGE_USERNAME } from './constants';
+import { CHANGE_USERNAME, MERGE_STATE } from './constants';
 
 // The initial state of the App
 export const initialState = {
+  localState: {
+    typePrint: undefined,
+  },
   username: '',
 };
 
@@ -24,6 +27,12 @@ const homeReducer = (state = initialState, action) =>
         // Delete prefixed '@' from the github username
         draft.username = action.username.replace(/@/gi, '');
         break;
+      case MERGE_STATE:
+        console.log('action_reducer', action.data);
+        return {
+          ...state,
+          localState: { ...state.localState, ...action.data },
+        };
     }
   });
 

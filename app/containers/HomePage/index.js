@@ -28,24 +28,31 @@ import Input from './Input';
 import Section from './Section';
 import messages from './messages';
 import { loadRepos } from '../App/actions';
-import { changeUsername } from './actions';
-import { makeSelectUsername } from './selectors';
+import { changeUsername, defaultAction, mergeState } from './actions';
+import makeSelectHomePage, { makeSelectUsername } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import Child from './Child';
 
 const key = 'home';
 
-export function HomePage({
-  username,
-  loading,
-  error,
-  repos,
-  onSubmitForm,
-  onChangeUsername,
-}) {
+export function HomePage(props) {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
+
+  const {
+    onDefaultAction,
+    onMergeState,
+    homePage,
+    username,
+    loading,
+    error,
+    repos,
+    onSubmitForm,
+    onChangeUsername,
+  } = props;
+
+  const { localData, localState } = homePage;
 
   useEffect(() => {
     // When initial state username is not null, submit the form to load repos
@@ -58,6 +65,8 @@ export function HomePage({
     repos,
   };
 
+  console.log('homePage', homePage);
+
   return (
     <article>
       <Helmet>
@@ -68,20 +77,12 @@ export function HomePage({
         />
       </Helmet>
       <div>
-        <CenteredSection>
-          <H2>
-            <FormattedMessage {...messages.startProjectHeader} />
-          </H2>
-          <p>
-            <FormattedMessage {...messages.startProjectMessage} />
-          </p>
-        </CenteredSection>
         <Section>
-          <H2>
-            <FormattedMessage {...messages.trymeHeader} />
-          </H2>
+          <Child
+            localState={localState}
+            onMergeState={data => onMergeState(data)}
+          />
 
-          <Child />
           <Form onSubmit={onSubmitForm}>
             <label htmlFor="username">
               <FormattedMessage {...messages.trymeMessage} />
@@ -97,6 +98,7 @@ export function HomePage({
               />
             </label>
           </Form>
+
           <ReposList {...reposListProps} />
         </Section>
       </div>
@@ -114,6 +116,7 @@ HomePage.propTypes = {
 };
 
 const mapStateToProps = createStructuredSelector({
+  homePage: makeSelectHomePage(),
   repos: makeSelectRepos(),
   username: makeSelectUsername(),
   loading: makeSelectLoading(),
@@ -122,6 +125,12 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
+    onMergeState: data => {
+      dispatch(mergeState(data));
+    },
+    onDefaultAction: data => {
+      dispatch(defaultAction(data));
+    },
     onChangeUsername: evt => dispatch(changeUsername(evt.target.value)),
     onSubmitForm: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();

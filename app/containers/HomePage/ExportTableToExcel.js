@@ -4,7 +4,15 @@ function ExportTableToExcel(props) {
   const { id } = props;
 
   return (
-    <div id={id} style={{ padding: '40px', fontSize: '13px' }}>
+    <div
+      id={id}
+      style={{
+        fontSize: '13px',
+        position: 'absolute',
+        top: '-1000000px',
+        overflow: 'hidden',
+      }}
+    >
       <table>
         <thead>
           <tr>

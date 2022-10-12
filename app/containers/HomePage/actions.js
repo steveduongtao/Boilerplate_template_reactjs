@@ -15,7 +15,7 @@
  *    }
  */
 
-import { CHANGE_USERNAME } from './constants';
+import { CHANGE_USERNAME, DEFAULT_ACTION, MERGE_STATE } from './constants';
 
 /**
  * Changes the input field of the form
@@ -28,5 +28,17 @@ export function changeUsername(username) {
   return {
     type: CHANGE_USERNAME,
     username,
+  };
+}
+export function mergeState(data) {
+  return {
+    type: MERGE_STATE,
+    data,
+  };
+}
+export function defaultAction(data) {
+  return {
+    type: DEFAULT_ACTION,
+    data,
   };
 }

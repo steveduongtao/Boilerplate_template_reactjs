@@ -10,3 +10,5 @@
  */
 
 export const CHANGE_USERNAME = 'boilerplate/Home/CHANGE_USERNAME';
+export const DEFAULT_ACTION = 'boilerplate/Home/DEFAULT_ACTION';
+export const MERGE_STATE = 'boilerplate/Home/MERGE_STATE';

@@ -188,22 +188,22 @@ export const exportPDF = (content, id, fileName = 'dowload') => {
   //   },
   // });
 };
-export const exportPDFt = (content, id, fileName = 'dowload') => {
+export const exportPDFt = async (content, id, fileName = 'dowload', cb) => {
   // const win = window.open();
-  // win.document.write(content);
+  // win.document.write(content);\{
   let input = document.getElementById(id);
+
   html2canvas(input, {
     useCORS: true,
     allowTaint: true,
     scrollY: 0,
-    scale: 4,
+    scale: 2, // độ sắc nét của trang pdf
   }).then(canvas => {
     const image = { type: 'jpeg', quality: 0.98 };
     const margin = [0.5, 0.5];
-    const filename = 'myfile.pdf';
 
-    var imgWidth = 8.5;
-    var pageHeight = 11;
+    var imgWidth = 11;
+    var pageHeight = 8.5;
 
     var innerPageWidth = imgWidth - margin[0] * 2;
     var innerPageHeight = pageHeight - margin[1] * 2;
@@ -223,7 +223,7 @@ export const exportPDFt = (content, id, fileName = 'dowload') => {
     pageCanvas.height = pxPageHeight;
 
     // Initialize the PDF.
-    var pdf = new jsPDF('p', 'in', [8.5, 11]);
+    var pdf = new jsPDF('l', 'in', [8.5, 11]);
 
     for (var page = 0; page < nPages; page++) {
       // Trim the final page to reduce file size.
@@ -247,10 +247,9 @@ export const exportPDFt = (content, id, fileName = 'dowload') => {
       // pdf.setPage(page);
 
       //Đánh số vào page và set màu sắc
-
       pdf.setFontSize(10);
       pdf.setTextColor(150);
-      pdf.text('Page' + String(page + 1) + 'of' + String(nPages), 7, 10.8);
+      pdf.text('Page' + String(page + 1) + 'of' + String(nPages), 10, 8.3);
       // }
       pdf.addImage(
         imgData,
@@ -260,9 +259,23 @@ export const exportPDFt = (content, id, fileName = 'dowload') => {
         innerPageWidth,
         pageHeight,
       );
+      // var string = pdf.output('datauristring');
+      // console.log('stringstring', string);
+      // var embed = "<embed width='100%' height='100%' src='" + string + "'/>";
+      // var x = window.open();
+      // // x.document.open();
+      // x.document.write(embed);
+      // x.document.close();
     }
+    window.open(
+      pdf.output('bloburl', {
+        filename: 'new-file.pdf',
+      }),
+      '_blank',
+    );
+    cb && cb();
 
-    pdf.save();
+    // pdf.save(`${fileName}.pdf`);
   });
   // var scaleBy = 5;
   // var w = 1000;
