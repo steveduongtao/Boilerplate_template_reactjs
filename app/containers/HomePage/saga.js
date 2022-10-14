@@ -8,11 +8,14 @@ import { reposLoaded, repoLoadingError } from 'containers/App/actions';
 
 import request from 'utils/request';
 import { makeSelectUsername } from 'containers/HomePage/selectors';
+import { exportPDFt } from './helper';
+import { mergeState } from './actions';
 
 /**
  * Github repos request/response handler
  */
-export function* getRepos() {
+export function* getRepos(data) {
+  console.log(18, data);
   // Select username from store
   const username = yield select(makeSelectUsername());
   console.log('getRepos', username);
@@ -22,6 +25,9 @@ export function* getRepos() {
     // Call our request helper (see 'utils/request')
     const repos = yield call(request, requestURL);
     yield put(reposLoaded(repos, username));
+    // yield put(mergeState({ typePrint: 'print', loadingBtn: true }));
+    // yield exportPDFt('', 'table1', 'duongthetaoDashboard');
+    // yield put(mergeState({ typePrint: 'print', loadingBtn: false }));
   } catch (err) {
     yield put(repoLoadingError(err));
   }

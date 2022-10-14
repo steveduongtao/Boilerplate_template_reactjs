@@ -267,12 +267,20 @@ export const exportPDFt = async (content, id, fileName = 'dowload', cb) => {
       // x.document.write(embed);
       // x.document.close();
     }
-    window.open(
+    // window.open(
+    //   pdf.output('bloburl', {
+    //     filename: 'new-file.pdf',
+    //   }),
+    //   '_blank',
+    // );
+
+    document.querySelector('#duongthetao').setAttribute(
+      'src',
       pdf.output('bloburl', {
-        filename: 'new-file.pdf',
+        filename: 'new-file.p df',
       }),
-      '_blank',
     );
+
     cb && cb();
 
     // pdf.save(`${fileName}.pdf`);

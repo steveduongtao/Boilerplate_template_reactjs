@@ -78,12 +78,7 @@ export function HomePage(props) {
       </Helmet>
       <div>
         <Section>
-          <Child
-            localState={localState}
-            onMergeState={data => onMergeState(data)}
-          />
-
-          <Form onSubmit={onSubmitForm}>
+          <Form onSubmit={onSubmitForm(onMergeState)}>
             <label htmlFor="username">
               <FormattedMessage {...messages.trymeMessage} />
               <AtPrefix>
@@ -98,6 +93,10 @@ export function HomePage(props) {
               />
             </label>
           </Form>
+          <Child
+            localState={localState}
+            onMergeState={data => onMergeState(data)}
+          />
 
           <ReposList {...reposListProps} />
         </Section>
@@ -132,9 +131,9 @@ export function mapDispatchToProps(dispatch) {
       dispatch(defaultAction(data));
     },
     onChangeUsername: evt => dispatch(changeUsername(evt.target.value)),
-    onSubmitForm: evt => {
+    onSubmitForm: (evt, data) => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
-      dispatch(loadRepos());
+      dispatch(loadRepos(data));
     },
   };
 }

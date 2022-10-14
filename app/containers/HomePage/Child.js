@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@material-ui/core';
+import { Button, Grid, Tooltip } from '@material-ui/core';
 import React, { useContext } from 'react';
 import { ReactReduxContext } from 'react-redux';
 import ExportTableToExcel from './ExportTableToExcel';
@@ -36,8 +36,6 @@ function Child(props) {
   return (
     <>
       <h1>Child</h1>
-      <Look />
-
       <Tooltip title="Download Excel" placement="start-top">
         <Button
           variant="contained"
@@ -93,7 +91,15 @@ function Child(props) {
         </Button>
       </Tooltip>
 
+      <iframe
+        // frameborder="0"
+        style={{ display: 'block', width: '99vw', height: '100vh' }}
+        src={'https://www.pinterest.com/'}
+        id={'duongthetao'}
+      />
+
       {typePrint && <ExportTableToExcel id={'table1'} />}
+      {/* {<ExportTableToExcel id={'table1'} />} */}
     </>
   );
 }
