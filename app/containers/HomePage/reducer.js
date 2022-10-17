@@ -8,12 +8,25 @@
  */
 
 import produce from 'immer';
-import { CHANGE_USERNAME, MERGE_STATE } from './constants';
+import {
+  CHANGE_CLOSE_SNACKBAR,
+  CHANGE_SNACKBAR,
+  CHANGE_USERNAME,
+  MERGE_STATE,
+} from './constants';
 
 // The initial state of the App
 export const initialState = {
   localState: {
     typePrint: undefined,
+    isIframe: false,
+    isShowSearch: false,
+    changeSnackbar: {
+      open: false,
+      variant: '',
+      message: '',
+    },
+    isLoading: false,
   },
   username: '',
 };
@@ -32,6 +45,28 @@ const homeReducer = (state = initialState, action) =>
         return {
           ...state,
           localState: { ...state.localState, ...action.data },
+        };
+      case CHANGE_SNACKBAR:
+        return {
+          ...state,
+          localState: {
+            ...state.localState,
+            changeSnackbar: {
+              ...state.localState.changeSnackbar,
+              ...action.data,
+            },
+          },
+        };
+      case CHANGE_CLOSE_SNACKBAR:
+        return {
+          ...state,
+          localState: {
+            ...state.localState,
+            changeSnackbar: {
+              ...state.localState.changeSnackbar,
+              open: false,
+            },
+          },
         };
     }
   });

@@ -9,13 +9,12 @@ import { reposLoaded, repoLoadingError } from 'containers/App/actions';
 import request from 'utils/request';
 import { makeSelectUsername } from 'containers/HomePage/selectors';
 import { exportPDFt } from './helper';
-import { mergeState } from './actions';
+import { changeSnackBar, mergeState } from './actions';
 
 /**
  * Github repos request/response handler
  */
-export function* getRepos(data) {
-  console.log(18, data);
+export function* getRepos() {
   // Select username from store
   const username = yield select(makeSelectUsername());
   console.log('getRepos', username);
@@ -23,13 +22,42 @@ export function* getRepos(data) {
 
   try {
     // Call our request helper (see 'utils/request')
-    const repos = yield call(request, requestURL);
-    yield put(reposLoaded(repos, username));
+    const response = yield call(request, requestURL);
+    console.log('reponse', response);
+
+    if (response.length > 0) {
+      yield put(reposLoaded(response, username));
+      yield put(mergeState({ isLoading: false }));
+      yield put(
+        changeSnackBar({
+          open: true,
+          variant: 'success',
+          message: 'Call API success !',
+        }),
+      );
+    } else {
+      yield put(mergeState({ isLoading: false }));
+      yield put(
+        changeSnackBar({
+          open: true,
+          variant: 'warning',
+          message: 'Not found ! Please type again!',
+        }),
+      );
+    }
     // yield put(mergeState({ typePrint: 'print', loadingBtn: true }));
     // yield exportPDFt('', 'table1', 'duongthetaoDashboard');
     // yield put(mergeState({ typePrint: 'print', loadingBtn: false }));
   } catch (err) {
     yield put(repoLoadingError(err));
+    yield put(mergeState({ isLoading: false }));
+    yield put(
+      changeSnackBar({
+        open: true,
+        variant: 'error',
+        message: 'Call API error !',
+      }),
+    );
   }
 }
 

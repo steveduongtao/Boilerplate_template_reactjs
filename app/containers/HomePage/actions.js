@@ -15,7 +15,13 @@
  *    }
  */
 
-import { CHANGE_USERNAME, DEFAULT_ACTION, MERGE_STATE } from './constants';
+import {
+  CHANGE_CLOSE_SNACKBAR,
+  CHANGE_SNACKBAR,
+  CHANGE_USERNAME,
+  DEFAULT_ACTION,
+  MERGE_STATE,
+} from './constants';
 
 /**
  * Changes the input field of the form
@@ -39,6 +45,18 @@ export function mergeState(data) {
 export function defaultAction(data) {
   return {
     type: DEFAULT_ACTION,
+    data,
+  };
+}
+export function changeSnackBar(data) {
+  return {
+    type: CHANGE_SNACKBAR,
+    data,
+  };
+}
+export function onChangeCloseSnackBar(data) {
+  return {
+    type: CHANGE_CLOSE_SNACKBAR,
     data,
   };
 }
