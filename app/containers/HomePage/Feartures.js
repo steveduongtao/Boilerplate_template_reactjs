@@ -1,17 +1,20 @@
-import { Button, Menu, MenuItem, Tooltip } from '@material-ui/core';
+import { Button, Divider, Menu, MenuItem, Tooltip } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import PrintIcon from '@material-ui/icons/Print';
+import SearchIcon from '@material-ui/icons/Search';
+import SettingsRemoteIcon from '@material-ui/icons/SettingsRemote';
+import SwapCallsIcon from '@material-ui/icons/SwapCalls';
 import React, { useContext, useState } from 'react';
 import { ReactReduxContext } from 'react-redux';
+import ExportFromJson from './ExportFromJson/ExportFromJson';
+import ExportPDFhtml2pdf from './exportPDFNewsVersion/ExportPDFhtml2pdf';
 import ExportTableToExcel from './ExportTableToExcel';
-import { exportPDFt, printPDF, tableToExcel, tableToPDF } from './helper';
-import SearchIcon from '@material-ui/icons/Search';
-import SwapCallsIcon from '@material-ui/icons/SwapCalls';
-import SettingsRemoteIcon from '@material-ui/icons/SettingsRemote';
+import { exportPDFt2, printPDF, tableToExcel, tableToPDF } from './helper';
+import ImportFile from './ImportFile';
+import PrintSameTab from './PrintSameTab';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -19,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Child(props) {
+function Feartures(props) {
   const classes = useStyles();
   const { localState, onMergeState, onChangeSnackBar } = props;
   const { typePrint, loadingBtn, isIframe, isShowSearch } = localState;
@@ -89,7 +92,8 @@ function Child(props) {
               loadingBtn: true,
               isIframe: true,
             });
-            exportPDFt('', 'table1', 'duongthetaoDashboard', cb);
+            // exportPDFt('', 'table1', 'duongthetaoDashboard', cb);
+            exportPDFt2('', 'table1', 'duongthetaoDashboard', cb);
           }}
         >
           {loadingBtn ? (
@@ -125,26 +129,6 @@ function Child(props) {
           <SearchIcon fontSize="large" />
         </Button>
       </Tooltip>
-      {/* <Tooltip title="Turn on Snackbar" placement="start-top">
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          className={classes.button}
-          onClick={() => {
-            // onMergeState({ isShowSearch: !isShowSearch });
-            onChangeSnackBar({
-              open: true,
-              variant: 'success',
-              message:
-                'Chỉ cần bạn cố gắng không ngừng nhất định bạn sẽ thành công!!!',
-            });
-          }}
-        >
-          <SettingsRemoteIcon fontSize="large" />
-        </Button>
-      </Tooltip> */}
-
       <Button
         aria-controls="simple-menu"
         aria-haspopup="true"
@@ -209,6 +193,43 @@ function Child(props) {
         </MenuItem>
       </Menu>
 
+      {/* Print in the same tab */}
+      <Tooltip title="Print in the current tab" placement="start-top">
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          className={classes.button}
+          onClick={async () => {
+            await onMergeState({ typePrint: 'pdf' });
+            printPDF(tableToPDF('table1', 'duongthetao1', 'duongthetao2'));
+          }}
+        >
+          <PrintIcon fontSize="large" />
+        </Button>
+      </Tooltip>
+
+      {typePrint && <ExportTableToExcel id={'table1'} />}
+
+      {/* Upload files */}
+      <ImportFile />
+
+      {/* Print table in the same tab */}
+      <PrintSameTab />
+      {/* Component này hiện thiếu nhiều chức năng >> bỏ */}
+
+      {/*  */}
+      {/* EXPORT PDF - Đã giải quyết việc cắt vào chữ và cắt vào bảng  */}
+      <ExportPDFhtml2pdf
+        localState={localState}
+        onMergeState={data => onMergeState(data)}
+      />
+
+      {/* <DowloadFiles /> */}
+      <ExportFromJson />
+
+      <Divider />
+
       {isIframe && (
         <iframe
           frameborder="0"
@@ -217,10 +238,9 @@ function Child(props) {
         />
       )}
 
-      {typePrint && <ExportTableToExcel id={'table1'} />}
       {/* {<ExportTableToExcel id={'table1'} />} */}
     </>
   );
 }
 
-export default Child;
+export default Feartures;

@@ -18,6 +18,7 @@ import {
 // The initial state of the App
 export const initialState = {
   localState: {
+    hideDiv: false,
     typePrint: undefined,
     isIframe: false,
     isShowSearch: false,

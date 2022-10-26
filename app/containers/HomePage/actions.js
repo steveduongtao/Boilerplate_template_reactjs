@@ -21,6 +21,7 @@ import {
   CHANGE_USERNAME,
   DEFAULT_ACTION,
   MERGE_STATE,
+  GET_DATA,
 } from './constants';
 
 /**
@@ -57,6 +58,12 @@ export function changeSnackBar(data) {
 export function onChangeCloseSnackBar(data) {
   return {
     type: CHANGE_CLOSE_SNACKBAR,
+    data,
+  };
+}
+export function getData(data) {
+  return {
+    type: GET_DATA,
     data,
   };
 }

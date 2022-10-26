@@ -14,3 +14,4 @@ export const DEFAULT_ACTION = 'boilerplate/Home/DEFAULT_ACTION';
 export const MERGE_STATE = 'boilerplate/Home/MERGE_STATE';
 export const CHANGE_SNACKBAR = 'boilerplate/Home/CHANGE_SNACKBAR';
 export const CHANGE_CLOSE_SNACKBAR = 'boilerplate/Home/CHANGE_CLOSE_SNACKBAR';
+export const GET_DATA = 'boilerplate/Home/GET_DATA';

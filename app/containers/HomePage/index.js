@@ -28,15 +28,17 @@ import {
   defaultAction,
   mergeState,
   onChangeCloseSnackBar,
+  getData,
 } from './actions';
-import Child from './Child';
 import CustomSnackbar from './CustomSnackbar';
+import Feartures from './Feartures';
 import Form from './Form';
 import Loading from './Loading/Loading';
 import reducer from './reducer';
 import saga from './saga';
 import Section from './Section';
 import makeSelectHomePage, { makeSelectUsername } from './selectors';
+import $ from 'jquery';
 
 const key = 'home';
 
@@ -56,10 +58,11 @@ export function HomePage(props) {
     onChangeUsername,
     onChangeCloseSnackBar,
     onChangeSnackBar,
+    onGetData,
   } = props;
 
   const { localData, localState } = homePage;
-  const { isShowSearch, changeSnackbar, isLoading } = localState;
+  const { isShowSearch, changeSnackbar, isLoading, dataStudent } = localState;
   console.log('changeSnackbar', changeSnackbar);
   console.log('localState_Home', localState);
 
@@ -71,41 +74,12 @@ export function HomePage(props) {
     // When initial state username is not null, submit the form to load repos
     if (username && username.trim().length > 0) onSubmitForm();
   }, []);
-
   const reposListProps = {
     loading,
     error,
     repos,
   };
-
   console.log('homePage', repos);
-
-  // async function getFiles() {
-  //   try {
-  //     if (!code || !id || id === 'add') return;
-  //     const url = `${UPLOAD_APP_URL}/file-system/company?clientId=${clientId}&code=${code}&id=${id}`;
-  //     const result = await fetchData(url, 'GET', null, 'token_03');
-  //     const midPath = result.find(i => i.mid);
-  //     const listFiles = result.filter(
-  //       i => i.parentPath === midPath.fullPath && !i.isFile,
-  //     );
-  //     if (listFiles.length) setList(listFiles);
-  //     if (isArray(result)) setFiles(result.filter(i => i.isFile));
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
-  // const onChangeFile =(file)=>{
-  //   const reader= new FileReader()
-  //   const rABS = !!reader.readAsBinaryString
-  //   reader.onload=(e)=>{
-  //     try{
-  //       const bstr= e.target.result;
-  //       const = XLSX.read(bstr,{type:rABS?})
-  //     }
-  //   }
-  // }
 
   function handleFile(file /* :File */) {
     /* Boilerplate to set up FileReader */
@@ -135,33 +109,36 @@ export function HomePage(props) {
     handleFile(files);
   }
 
-  // async function uploadFile(e) {
-  //   console.log('event', e.target.files);
-  //   setShow(true);
-  //   setFileName(e.target.files[0].name);
-  //   // if (!code || !id || !name || id === 'add') return;
-  //   const files = e.target.files;
-  //   const formData = new FormData();
+  function filePicked(oEvent) {
+    // Get The File From The Input
+    var oFile = oEvent.target.files[0];
+    var sFilename = oFile.name;
+    // Create A File Reader HTML5
+    var reader = new FileReader();
 
-  //   for (let i = 0; i < files.length; i++) {
-  //     formData.append(`images[${i}]`, files[i]);
-  //   }
+    // Ready The Event For When A File Gets Selected
+    reader.onload = function(e) {
+      var data = e.target.result;
+      var cfb = XLSX.CFB.read(data, { type: 'binary' });
+      var wb = XLSX.parse_xlscfb(cfb);
+      // Loop Over Each Sheet
+      wb.SheetNames.forEach(function(sheetName) {
+        // Obtain The Current Row As CSV
+        var sCSV = XLSX.utils.make_csv(wb.Sheets[sheetName]);
+        var oJS = XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
 
-  //   console.log('formData', formData);
-  //   // const url = `${UPLOAD_APP_URL}/file-system/company/Upload?clientId=${clientId}&code=${code}&mid=${id}&mname=${name}&fname=${
-  //   //   state.name
-  //   // }&ftype=${state.type}`;
-  //   // const head = {
-  //   //   method: 'POST',
-  //   //   headers: {
-  //   //     Authorization: `Bearer ${localStorage.getItem('token_03')}`,
-  //   //   },
-  //   //   body: form,
-  //   // };
-  //   // await fetch(url, head);
-  //   // await getFiles();
-  //   console.log('filefile', form);
-  // }
+        $('#my_file_output').html(sCSV);
+        console.log(oJS);
+      });
+    };
+
+    // Tell JS To Start Reading The File.. You could delay this if desired
+    reader.readAsBinaryString(oFile);
+  }
+
+  useEffect(() => {
+    onGetData();
+  }, []);
 
   return (
     <article>
@@ -174,8 +151,8 @@ export function HomePage(props) {
       </Helmet>
       <div>
         <Section>
-          {/* Child component */}
-          <Child
+          {/* Feartures component */}
+          <Feartures
             onChangeSnackBar={data => {
               onChangeSnackBar(data);
             }}
@@ -206,13 +183,6 @@ export function HomePage(props) {
                     value={username}
                     onChange={onChangeUsername}
                   />
-                  {/* <Input
-                id="username"
-                type="text"
-                placeholder="mxstbr"
-                value={username}
-                onChange={onChangeUsername}
-              /> */}
                 </Form>
                 <ReposList {...reposListProps} />
               </Grid>
@@ -227,27 +197,6 @@ export function HomePage(props) {
           message={changeSnackbar.message}
           onClose={() => onChangeCloseSnackBar()}
         />
-
-        <input
-          ref={inputEl}
-          multiple
-          onChange={uploadFile}
-          id="fileUpload"
-          // style={{ display: 'none' }}
-          name="fileUpload"
-          type="file"
-          accept=".xlxs"
-        />
-        {show && (
-          <TextField
-            value={fileName}
-            label="Size"
-            id="standard-size-small"
-            defaultValue="Small"
-            size="small"
-          />
-        )}
-
         {/* Loading */}
         {isLoading && <Loading />}
       </div>
@@ -290,6 +239,9 @@ export function mapDispatchToProps(dispatch) {
     },
     onChangeCloseSnackBar: () => {
       dispatch(onChangeCloseSnackBar());
+    },
+    onGetData: data => {
+      dispatch(getData(data));
     },
   };
 }

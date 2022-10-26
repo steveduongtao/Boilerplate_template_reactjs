@@ -10,6 +10,7 @@ import request from 'utils/request';
 import { makeSelectUsername } from 'containers/HomePage/selectors';
 import { exportPDFt } from './helper';
 import { changeSnackBar, mergeState } from './actions';
+import { GET_DATA } from './constants';
 
 /**
  * Github repos request/response handler
@@ -61,6 +62,43 @@ export function* getRepos() {
   }
 }
 
+export function* getData() {
+  try {
+    const response = yield call(
+      request,
+      'https://js-post-api.herokuapp.com/api/students',
+    );
+    console.log('data', response);
+    if (response.length > 0) {
+      yield put(mergeState({ dataStudent: response }));
+      yield put(
+        changeSnackBar({
+          open: true,
+          variant: 'success',
+          message: 'Call API success !',
+        }),
+      );
+    } else {
+      yield put(mergeState({ isLoading: false }));
+      yield put(
+        changeSnackBar({
+          open: true,
+          variant: 'warning',
+          message: 'Not found ! Please type again!',
+        }),
+      );
+    }
+  } catch (err) {
+    yield put(
+      changeSnackBar({
+        open: true,
+        message: 'Lấy trạng thái thất bại',
+        variant: 'error',
+      }),
+    );
+  }
+}
+
 /**
  * Root saga manages watcher lifecycle
  */
@@ -70,4 +108,5 @@ export default function* githubData() {
   // It returns task descriptor (just like fork) so we can continue execution
   // It will be cancelled automatically on component unmount
   yield takeLatest(LOAD_REPOS, getRepos);
+  yield takeLatest(GET_DATA, getData);
 }
