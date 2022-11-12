@@ -28,6 +28,28 @@ module.exports = options => ({
         },
       },
       {
+        test: /\.(pdf)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(docx)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+            },
+          },
+        ],
+      },
+      {
         // Preprocess our own .css files
         // This is the place to add your own loaders (e.g. sass/less etc.)
         // for a list of loaders, see https://webpack.js.org/loaders/#styling
@@ -45,6 +67,7 @@ module.exports = options => ({
         test: /\.(eot|otf|ttf|woff|woff2)$/,
         use: 'file-loader',
       },
+
       {
         test: /\.svg$/,
         use: [
@@ -68,6 +91,7 @@ module.exports = options => ({
               limit: 10 * 1024,
             },
           },
+
           {
             loader: 'image-webpack-loader',
             options: {

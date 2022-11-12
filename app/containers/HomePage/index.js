@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import * as XLSX from 'xlsx';
 
 import { Grid, TextField } from '@material-ui/core';
 import ReposList from 'components/ReposList';
@@ -20,7 +21,8 @@ import {
 } from 'containers/App/selectors';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
-import XLSX from 'xlsx';
+import $ from 'jquery';
+import { transformFileAsync } from '@babel/core';
 import { loadRepos } from '../App/actions';
 import {
   changeSnackBar,
@@ -38,7 +40,6 @@ import reducer from './reducer';
 import saga from './saga';
 import Section from './Section';
 import makeSelectHomePage, { makeSelectUsername } from './selectors';
-import $ from 'jquery';
 
 const key = 'home';
 
@@ -111,21 +112,21 @@ export function HomePage(props) {
 
   function filePicked(oEvent) {
     // Get The File From The Input
-    var oFile = oEvent.target.files[0];
-    var sFilename = oFile.name;
+    const oFile = oEvent.target.files[0];
+    const sFilename = oFile.name;
     // Create A File Reader HTML5
-    var reader = new FileReader();
+    const reader = new FileReader();
 
     // Ready The Event For When A File Gets Selected
     reader.onload = function(e) {
-      var data = e.target.result;
-      var cfb = XLSX.CFB.read(data, { type: 'binary' });
-      var wb = XLSX.parse_xlscfb(cfb);
+      const data = e.target.result;
+      const cfb = XLSX.CFB.read(data, { type: 'binary' });
+      const wb = XLSX.parse_xlscfb(cfb);
       // Loop Over Each Sheet
       wb.SheetNames.forEach(function(sheetName) {
         // Obtain The Current Row As CSV
-        var sCSV = XLSX.utils.make_csv(wb.Sheets[sheetName]);
-        var oJS = XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
+        const sCSV = XLSX.utils.make_csv(wb.Sheets[sheetName]);
+        const oJS = XLSX.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
 
         $('#my_file_output').html(sCSV);
         console.log(oJS);
@@ -139,6 +140,60 @@ export function HomePage(props) {
   useEffect(() => {
     onGetData();
   }, []);
+
+  async function Presidents() {
+    console.log('in');
+    /* fetch JSON data and parse */
+    const url = 'https://sheetjs.com/data/executive.json';
+    const raw_data = await fetch(url).then(res => res.json());
+    console.log('raw_data', raw_data);
+    /* filter for the Presidents */
+    const prez = raw_data.filter(row =>
+      row.terms.some(term => term.type === 'prez'),
+    );
+
+    /* flatten objects */
+    // const rows = prez.map(row => ({
+    //   name: row.name.first + ' ' + row.name.last,
+    //   birthday: row.bio.birthday,
+    // }));
+
+    const rows = [
+      {
+        stt: '000012',
+        name: 'tienkhanh',
+      },
+      {
+        stt: '000012',
+        name: 'tienkhanh',
+      },
+      {
+        stt: '000012',
+        name: 'tienkhanh',
+      },
+      {
+        stt: '000012',
+        name: 'tienkhanh',
+      },
+    ];
+
+    /* generate worksheet and workbook */
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Dates');
+
+    /* fix headers */
+    XLSX.utils.sheet_add_aoa(worksheet, [['Name', 'Birthday']], {
+      origin: 'A1',
+    });
+
+    /* calculate column width */
+    const max_width = rows.reduce((w, r) => Math.max(w, r.name.length), 10);
+    worksheet['!cols'] = [{ wch: max_width }];
+
+    /* create an XLSX file and try to save to Presidents.xlsx */
+    XLSX.writeFile(workbook, 'Presidents.xlsx', { compression: true });
+  }
 
   return (
     <article>
@@ -189,7 +244,7 @@ export function HomePage(props) {
             </Grid>
           )}
         </Section>
-
+        <button onClick={() => Presidents()}>AAAAAAAAAAaaaaa</button>
         {/* Snackbar đã customed */}
         <CustomSnackbar
           open={changeSnackbar.open}

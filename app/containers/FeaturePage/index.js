@@ -4,74 +4,47 @@
  * List all the features
  */
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
+import FileViewer from 'react-file-viewer';
+// import './styles.css';
+import ExportFromJson from './ExportFromJson/ExportFromJson';
+//  exclude: /node_modules/,;
 
-import H1 from 'components/H1';
-import messages from './messages';
-import List from './List';
-import ListItem from './ListItem';
-import ListItemTitle from './ListItemTitle';
+const onError = e => {
+  console.log(e, 'error in file-viewer');
+};
 
 export default function FeaturePage() {
+  const onError = e => {
+    console.log(e, 'error in file-viewer');
+  };
   return (
     <div>
-      <Helmet>
-        <title>Feature Page</title>
-        <meta
-          name="description"
-          content="Feature page of React.js Boilerplate application"
-        />
-      </Helmet>
-      <H1>
-        <FormattedMessage {...messages.header} />
-      </H1>
-      <List>
-        <ListItem>
-          <ListItemTitle>
-            <FormattedMessage {...messages.scaffoldingHeader} />
-          </ListItemTitle>
-          <p>
-            <FormattedMessage {...messages.scaffoldingMessage} />
-          </p>
-        </ListItem>
-
-        <ListItem>
-          <ListItemTitle>
-            <FormattedMessage {...messages.feedbackHeader} />
-          </ListItemTitle>
-          <p>
-            <FormattedMessage {...messages.feedbackMessage} />
-          </p>
-        </ListItem>
-
-        <ListItem>
-          <ListItemTitle>
-            <FormattedMessage {...messages.routingHeader} />
-          </ListItemTitle>
-          <p>
-            <FormattedMessage {...messages.routingMessage} />
-          </p>
-        </ListItem>
-
-        <ListItem>
-          <ListItemTitle>
-            <FormattedMessage {...messages.networkHeader} />
-          </ListItemTitle>
-          <p>
-            <FormattedMessage {...messages.networkMessage} />
-          </p>
-        </ListItem>
-
-        <ListItem>
-          <ListItemTitle>
-            <FormattedMessage {...messages.intlHeader} />
-          </ListItemTitle>
-          <p>
-            <FormattedMessage {...messages.intlMessage} />
-          </p>
-        </ListItem>
-      </List>
+      <ExportFromJson />
+      {/* <div>
+        <details>
+          <summary>.docx</summary>
+          <div style={{ height: '500px' }}>
+            {' '}
+            <FileViewer fileType="docx" filePath={dktt} onError={onError} />
+          </div>
+        </details>
+        <details>
+          <summary>.mp4</summary>
+          <FileViewer
+            fileType="mp4"
+            filePath="./mov_bbb.mp4"
+            onError={onError}
+          />
+        </details>
+        <details>
+          <summary>.pdf</summary>
+          <FileViewer fileType="pdf" filePath={DemoPDF} onError={onError} />
+        </details>
+        <details open>
+          <summary>.pdf</summary>
+          <FileViewer fileType="jpg" filePath={imgage1} onError={onError} />
+        </details>
+      </div> */}
     </div>
   );
 }
