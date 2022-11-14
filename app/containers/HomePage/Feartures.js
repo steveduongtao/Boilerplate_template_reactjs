@@ -3,18 +3,17 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import PrintIcon from '@material-ui/icons/Print';
 import SearchIcon from '@material-ui/icons/Search';
 import SettingsRemoteIcon from '@material-ui/icons/SettingsRemote';
 import SwapCallsIcon from '@material-ui/icons/SwapCalls';
 import React, { useContext, useState } from 'react';
 import { ReactReduxContext } from 'react-redux';
-import { exportPDFt2, printPDF, tableToExcel, tableToPDF } from '../../helper';
+import { exportPDFt2, tableToExcel } from '../../helper';
 import { DownloadFile } from '../DownloadFile';
 import ExportPdFv2 from '../ExportPdFv2';
 import PrintCurrentTab from '../PrintCurrentTab';
-import ExportTableToExcel from './ExportTableToExcel';
-import ImportFile from './ImportFile';
+import { PrintPdf } from '../PrintPdf';
+import UploadExcel from '../UploadExcel';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -65,20 +64,12 @@ function Feartures(props) {
         </Button>
       </Tooltip>
 
-      <Tooltip title="Print" placement="start-top">
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          className={classes.button}
-          onClick={async () => {
-            await onMergeState({ typePrint: 'pdf' });
-            printPDF(tableToPDF('table1', 'duongthetao1', 'duongthetao2'));
-          }}
-        >
-          <PrintIcon fontSize="large" />
-        </Button>
-      </Tooltip>
+      <PrintPdf
+        typePrint={typePrint}
+        onMergeState={data => {
+          onMergeState(data);
+        }}
+      />
 
       <Tooltip title="Preview PDF & Print" placement="start-top">
         <Button
@@ -193,26 +184,7 @@ function Feartures(props) {
         </MenuItem>
       </Menu>
 
-      {/* Print in the same tab */}
-      <Tooltip title="Print in the current tab" placement="start-top">
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          className={classes.button}
-          onClick={async () => {
-            await onMergeState({ typePrint: 'pdf' });
-            printPDF(tableToPDF('table1', 'duongthetao1', 'duongthetao2'));
-          }}
-        >
-          <PrintIcon fontSize="large" />
-        </Button>
-      </Tooltip>
-
-      {typePrint && <ExportTableToExcel id="table1" />}
-
-      {/* Upload files */}
-      <ImportFile />
+      <UploadExcel />
       <PrintCurrentTab />
       <ExportPdFv2
         localState={localState}
@@ -228,7 +200,6 @@ function Feartures(props) {
           id="duongthetao"
         />
       )}
-
       {/* {<ExportTableToExcel id={'table1'} />} */}
     </>
   );

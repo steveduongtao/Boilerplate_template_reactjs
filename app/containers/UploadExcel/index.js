@@ -1,9 +1,26 @@
-import { Button, Tooltip } from '@material-ui/core';
-import React, { useRef } from 'react';
-import XLSX from 'xlsx';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+/**
+ *
+ * UploadExcel
+ *
+ */
 
-function ImportFile() {
+import { Button, Tooltip } from '@material-ui/core';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import PropTypes from 'prop-types';
+import { default as React, memo, useRef } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import { useInjectReducer } from 'utils/injectReducer';
+import { useInjectSaga } from 'utils/injectSaga';
+import XLSX from 'xlsx';
+import reducer from './reducer';
+import saga from './saga';
+import makeSelectUploadExcel from './selectors';
+
+export function UploadExcel() {
+  useInjectReducer({ key: 'uploadExcel', reducer });
+  useInjectSaga({ key: 'uploadExcel', saga });
   function handleFile(file /* :File */) {
     /* Boilerplate to set up FileReader */
     const reader = new FileReader();
@@ -32,6 +49,7 @@ function ImportFile() {
     handleFile(files);
   }
   const inputEl = useRef(null);
+
   return (
     <>
       <Tooltip title="Upload file excel.xlsx">
@@ -60,4 +78,26 @@ function ImportFile() {
   );
 }
 
-export default ImportFile;
+UploadExcel.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = createStructuredSelector({
+  uploadExcel: makeSelectUploadExcel(),
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+export default compose(
+  withConnect,
+  memo,
+)(UploadExcel);
