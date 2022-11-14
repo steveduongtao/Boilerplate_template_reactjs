@@ -9,12 +9,12 @@ import SettingsRemoteIcon from '@material-ui/icons/SettingsRemote';
 import SwapCallsIcon from '@material-ui/icons/SwapCalls';
 import React, { useContext, useState } from 'react';
 import { ReactReduxContext } from 'react-redux';
-import ExportFromJson from './ExportFromJson/ExportFromJson';
-import ExportPDFhtml2pdf from './exportPDFNewsVersion/ExportPDFhtml2pdf';
+import { exportPDFt2, printPDF, tableToExcel, tableToPDF } from '../../helper';
+import { DownloadFile } from '../DownloadFile';
+import ExportPdFv2 from '../ExportPdFv2';
+import PrintCurrentTab from '../PrintCurrentTab';
 import ExportTableToExcel from './ExportTableToExcel';
-import { exportPDFt2, printPDF, tableToExcel, tableToPDF } from './helper';
 import ImportFile from './ImportFile';
-import PrintSameTab from './PrintSameTab';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -209,32 +209,23 @@ function Feartures(props) {
         </Button>
       </Tooltip>
 
-      {typePrint && <ExportTableToExcel id={'table1'} />}
+      {typePrint && <ExportTableToExcel id="table1" />}
 
       {/* Upload files */}
       <ImportFile />
-
-      {/* Print table in the same tab */}
-      <PrintSameTab />
-      {/* Component này hiện thiếu nhiều chức năng >> bỏ */}
-
-      {/*  */}
-      {/* EXPORT PDF - Đã giải quyết việc cắt vào chữ và cắt vào bảng  */}
-      <ExportPDFhtml2pdf
+      <PrintCurrentTab />
+      <ExportPdFv2
         localState={localState}
         onMergeState={data => onMergeState(data)}
       />
-
-      {/* <DowloadFiles /> */}
-      <ExportFromJson />
-
+      <DownloadFile />
       <Divider />
 
       {isIframe && (
         <iframe
-          frameborder="0"
+          frameBorder="0"
           style={{ display: 'block', width: '99vw', height: '100vh' }}
-          id={'duongthetao'}
+          id="duongthetao"
         />
       )}
 

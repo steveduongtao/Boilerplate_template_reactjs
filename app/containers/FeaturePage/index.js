@@ -4,9 +4,7 @@
  * List all the features
  */
 import React from 'react';
-import FileViewer from 'react-file-viewer';
 // import './styles.css';
-import ExportFromJson from './ExportFromJson/ExportFromJson';
 //  exclude: /node_modules/,;
 
 const onError = e => {
@@ -19,7 +17,6 @@ export default function FeaturePage() {
   };
   return (
     <div>
-      <ExportFromJson />
       {/* <div>
         <details>
           <summary>.docx</summary>

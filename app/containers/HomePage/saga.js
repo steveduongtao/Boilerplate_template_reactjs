@@ -8,7 +8,7 @@ import { reposLoaded, repoLoadingError } from 'containers/App/actions';
 
 import request from 'utils/request';
 import { makeSelectUsername } from 'containers/HomePage/selectors';
-import { exportPDFt } from './helper';
+import { exportPDFt } from '../../helper';
 import { changeSnackBar, mergeState } from './actions';
 import { GET_DATA } from './constants';
 
