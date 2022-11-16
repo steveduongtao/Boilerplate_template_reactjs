@@ -46,7 +46,7 @@ export function SnackBar(props) {
             variant="contained"
             color="primary"
             size="large"
-            className={classes.button}
+            // className={classes.button}
           >
             <SettingsRemoteIcon fontSize="large" />
           </Button>

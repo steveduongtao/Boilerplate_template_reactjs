@@ -4,7 +4,7 @@
  *
  */
 
-import { Button, Tooltip } from '@material-ui/core';
+import { Button, makeStyles, Tooltip } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import PropTypes from 'prop-types';
 import { default as React, memo, useRef } from 'react';
@@ -17,10 +17,16 @@ import XLSX from 'xlsx';
 import reducer from './reducer';
 import saga from './saga';
 import makeSelectUploadExcel from './selectors';
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
 
 export function UploadExcel() {
   useInjectReducer({ key: 'uploadExcel', reducer });
   useInjectSaga({ key: 'uploadExcel', saga });
+  const classes = useStyles();
   function handleFile(file /* :File */) {
     /* Boilerplate to set up FileReader */
     const reader = new FileReader();
@@ -57,6 +63,7 @@ export function UploadExcel() {
           variant="contained"
           color="primary"
           size="large"
+          className={classes.button}
           onClick={() => inputEl.current.click()}
         >
           <CloudUploadIcon fontSize="large" />
