@@ -2834,9 +2834,9 @@ export function DownloadFile() {
         id="fileinput"
         style={{ display: 'none' }}
       />
-      <p>
+      <span>
         <a id="download" download />
-      </p>
+      </span>
     </>
   );
 }
