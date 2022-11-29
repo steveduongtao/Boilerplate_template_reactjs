@@ -8,9 +8,11 @@ import {
   CHANGE_CLOSE_SNACKBAR,
   CHANGE_SNACKBAR,
   DEFAULT_ACTION,
-  GET_DATA,
-  GET_DATA_FAILURE,
-  GET_DATA_SUCCESS,
+  GET_CITY_LIST,
+  GET_CITY_LIST_SUCCESS,
+  GET_LIST,
+  GET_LIST_FAILURE,
+  GET_LIST_SUCCESS,
   MERGE_DATA,
   MERGE_STATE,
 } from './constants';
@@ -20,21 +22,33 @@ export function defaultAction() {
     type: DEFAULT_ACTION,
   };
 }
-export function getData(data) {
+export function getList(data) {
   return {
-    type: GET_DATA,
+    type: GET_LIST,
     data,
   };
 }
-export function getDataSuccess(data) {
+export function getListSuccess(data) {
   return {
-    type: GET_DATA_SUCCESS,
+    type: GET_LIST_SUCCESS,
     data,
   };
 }
-export function getDataFailure(data) {
+export function getListFailure(data) {
   return {
-    type: GET_DATA_FAILURE,
+    type: GET_LIST_FAILURE,
+    data,
+  };
+}
+export function getCityList(data) {
+  return {
+    type: GET_CITY_LIST,
+    data,
+  };
+}
+export function getCityListSuccess(data) {
+  return {
+    type: GET_CITY_LIST_SUCCESS,
     data,
   };
 }

@@ -5,6 +5,7 @@
  */
 
 import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import React, { memo, useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -14,42 +15,29 @@ import { createStructuredSelector } from 'reselect';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import CustomSnackbar from '../HomePage/CustomSnackbar';
-import { changeCloseSnackBar, getData } from './actions';
+import { changeCloseSnackBar, getList, getCityList } from './actions';
+import StudentFilter from './components/StudentFilter';
 import reducer from './reducer';
 import saga from './saga';
 import makeSelectCity from './selectors';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
-  link: {
-    color: 'inherit',
-    textDecoration: 'none',
-    '&.active > div': {
-      backgroundColor: theme.palette.action.selected,
-    },
-  },
-}));
-
 export function City(props) {
-  const classes = useStyles();
   useInjectReducer({ key: 'city', reducer });
   useInjectSaga({ key: 'city', saga });
-  const { city, onGetData, onChangeCloseSnackBar } = props;
+  const { city, onGetList, onGetCityList, onChangeCloseSnackBar } = props;
   const { localData, localState } = city;
-  const { changeSnackBar, loading } = localState;
-  const { studentList } = localData;
+  const { changeSnackBar, filter, pagination, loading } = localState;
+  const { studentList, cityList } = localData;
 
   useEffect(() => {
-    onGetData();
+    onGetList();
+    onGetCityList();
   }, []);
-  console.log('localData', studentList);
+  console.log('localData', localData);
   return (
     <>
-      <Box className={classes.root}>
+      <Box>
+        <StudentFilter cityList={cityList} />
         <TableContainer>
           <Table aria-label="simple table" size="small">
             <TableHead>
@@ -92,6 +80,14 @@ export function City(props) {
             </TableBody>
           </Table>
         </TableContainer>
+        <Box my={2} display="flex" justifyContent="center">
+          <Pagination
+            color="primary"
+            page={pagination._page}
+            count={Math.ceil(pagination._totalRows / pagination._limit)}
+            // onChange={handlePageChange}
+          />
+        </Box>
       </Box>
       <CustomSnackbar
         open={changeSnackBar.open}
@@ -113,8 +109,11 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    onGetData: data => {
-      dispatch(getData(data));
+    onGetList: data => {
+      dispatch(getList(data));
+    },
+    onGetCityList: data => {
+      dispatch(getCityList(data));
     },
     onChangeCloseSnackBar: data => {
       dispatch(changeCloseSnackBar(data));

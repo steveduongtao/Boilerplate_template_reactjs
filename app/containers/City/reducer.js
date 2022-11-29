@@ -4,7 +4,15 @@
  *
  */
 import produce from 'immer';
-import { CHANGE_CLOSE_SNACKBAR, CHANGE_SNACKBAR, DEFAULT_ACTION, GET_DATA_SUCCESS, MERGE_DATA, MERGE_STATE } from './constants';
+import {
+  CHANGE_CLOSE_SNACKBAR,
+  CHANGE_SNACKBAR,
+  DEFAULT_ACTION,
+  GET_CITY_LIST_SUCCESS,
+  GET_LIST_SUCCESS,
+  MERGE_DATA,
+  MERGE_STATE,
+} from './constants';
 
 export const initialState = {
   localData: {
@@ -27,8 +35,18 @@ export const initialState = {
     lowestStudentList: [],
     rankingByCityList: [],
     studentList: [],
+    cityList: [],
   },
   localState: {
+    filter: {
+      _page: 1,
+      _limit: 13,
+    },
+    pagination: {
+      _page: 1,
+      _limit: 20,
+      _totalRows: 15,
+    },
     loading: false,
     changeSnackBar: {
       open: false,
@@ -52,10 +70,16 @@ const cityReducer = (state = initialState, action) =>
           ...state,
           localState: { ...state.localState, ...action.data },
         };
-      case GET_DATA_SUCCESS:
+      case GET_LIST_SUCCESS:
         return {
           ...state,
           localData: { ...state.localData, studentList: [...action.data] },
+        };
+      case GET_CITY_LIST_SUCCESS:
+        console.log('localData_', action);
+        return {
+          ...state,
+          localData: { ...state.localData, cityList: [...action.data] },
         };
 
       case DEFAULT_ACTION:
