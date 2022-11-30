@@ -1,16 +1,30 @@
 /**
  * Gets the repositories of the user from Github
  */
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, debounce, put, takeLatest } from 'redux-saga/effects';
 import request from '../../utils/request';
-import { changeSnackBar, getCityListSuccess, getListSuccess } from './actions';
-import { GET_CITY_LIST, GET_LIST } from './constants';
+import { changeSnackBar, getCityListSuccess, getListSuccess, onLinerBuffer } from './actions';
+import { GET_CITY_LIST, GET_LIST, GET_LIST_DEBOUNCE } from './constants';
 
-export function* getList() {
+export function* getList(action) {
+  console.log('action_', action);
+  // const name_like = data.newFilter.name_like || undefined;
+  const city = (action && action.data && action.data.city) || undefined;
+  const _sort = (action && action.data && action.data._sort) || undefined;
+  const _order = (action && action.data && action.data._order) || undefined;
+  const name_like = (action && action.data && action.data.name_like) || undefined;
+  const _page = (action && action.data && action.data._page) || 1;
+  console.log('getList', action && action.data && action.data.city);
   try {
-    const response = yield call(request, 'https://js-post-api.herokuapp.com/api/students');
-    console.log('data', response);
-    if (response.length > 0) {
+    yield put(onLinerBuffer());
+    const response = yield call(
+      request,
+      `https://js-post-api.herokuapp.com/api/students?_page=${_page}&_limit=13${city ? `&city=${city}` : ''}${_sort ? `&_sort=${_sort}` : ''}${
+        _order ? `&_order=${_order}` : ''
+      }${name_like ? `&name_like=${name_like}` : ''}`,
+    );
+    console.log('data', response.data);
+    if (response) {
       // yield put(mergeState({ dataStudent: response }));
       yield put(changeSnackBar({ open: true, variant: 'success', message: 'Call API success !' }));
       yield put(getListSuccess(response));
@@ -37,6 +51,9 @@ export function* getCityList() {
 }
 
 export default function* citySaga() {
+  /**Filter */
   yield takeLatest(GET_LIST, getList);
+  yield debounce(500, GET_LIST_DEBOUNCE, getList);
+  /**Fetch API */
   yield takeLatest(GET_CITY_LIST, getCityList);
 }

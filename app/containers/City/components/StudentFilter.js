@@ -1,24 +1,77 @@
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select } from '@material-ui/core';
+import { Box, Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, OutlinedInput, Select } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
+import { filter } from 'lodash';
 import React from 'react';
 import { City } from '..';
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    marginBottom: theme.spacing(1),
+  },
+}));
+
 function StudentFilter(props) {
-  const { cityList } = props;
+  const classes = useStyles();
+  const { cityList, filter, onChange, onSearchChange } = props;
+  const handleSearchChange = e => {
+    const newFilter = {
+      ...filter,
+      name_like: e.target.value,
+      _page: 1,
+    };
+    onSearchChange(newFilter);
+  };
+
+  const handleCityChange = e => {
+    const newFilter = {
+      ...filter,
+      _page: 1,
+      city: e.target.value || '',
+    };
+    onChange(newFilter);
+  };
+  const handleSortChange = e => {
+    const value = e.target.value;
+    const [_sort, _order] = value.split('.');
+    const newFilter = {
+      ...filter,
+      _sort: _sort || undefined,
+      _order: _order || undefined,
+    };
+    onChange(newFilter);
+  };
+  const handleClearFilter = e => {
+    const newFilter = {
+      ...filter,
+      _page: 1,
+      _sort: undefined,
+      _order: undefined,
+      name_like: undefined,
+      city: undefined,
+    };
+    onChange(newFilter);
+  };
+
   return (
-    <Box>
+    <Box className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <FormControl fullWidth variant="outlined" size="small">
             <InputLabel htmlFor="searchByName">Search by name</InputLabel>
-            <OutlinedInput label="searchByName" id="searchByName" endAdornment={<Search />} />
+            <OutlinedInput
+              label="searchByName"
+              id="searchByName"
+              onChange={handleSearchChange}
+              endAdornment={<Search />}
+              value={filter.name_like || ''}
+            />
           </FormControl>
         </Grid>
         {/* Filter by city */}
         <Grid item xs={12} md={3}>
           <FormControl fullWidth variant="outlined" size="small">
             <InputLabel id="filterByCity">Filter by city</InputLabel>
-            <Select labelId="filterByCity" id="filterByCity-select" lable="Filter by city">
+            <Select labelId="filterByCity" id="filterByCity-select" label="Filter by city" onChange={handleCityChange} value={filter.city || ''}>
               <MenuItem value="">
                 <em>All</em>
               </MenuItem>
@@ -34,7 +87,13 @@ function StudentFilter(props) {
         <Grid item xs={12} md={2}>
           <FormControl fullWidth variant="outlined" size="small">
             <InputLabel id="sortBy">Sort by</InputLabel>
-            <Select labelId="sortBy" id="sort-select" value="">
+            <Select
+              labelId="sortBy"
+              id="sort-select"
+              label="Sort by"
+              onChange={handleSortChange}
+              value={filter.city ? `${filter._sort}.${filter._order}` : ''}
+            >
               <MenuItem value="">
                 <em>No sort</em>
               </MenuItem>
@@ -47,7 +106,7 @@ function StudentFilter(props) {
         </Grid>
         {/* Clear*/}
         <Grid item xs={12} md={1}>
-          <Button variant="outlined" color="primary" fullWidth>
+          <Button variant="outlined" color="primary" fullWidth onClick={handleClearFilter}>
             Clear
           </Button>
         </Grid>

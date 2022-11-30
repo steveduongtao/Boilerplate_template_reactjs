@@ -11,6 +11,8 @@ import {
   GET_CITY_LIST,
   GET_CITY_LIST_SUCCESS,
   GET_LIST,
+  GET_LIST_DEBOUNCE,
+  ON_LINER_BUFFER,
   GET_LIST_FAILURE,
   GET_LIST_SUCCESS,
   MERGE_DATA,
@@ -38,6 +40,17 @@ export function getListFailure(data) {
   return {
     type: GET_LIST_FAILURE,
     data,
+  };
+}
+export function getListWidthDebounce(data) {
+  return {
+    type: GET_LIST_DEBOUNCE,
+    data,
+  };
+}
+export function onLinerBuffer() {
+  return {
+    type: ON_LINER_BUFFER,
   };
 }
 export function getCityList(data) {

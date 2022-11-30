@@ -4,7 +4,7 @@
  *
  */
 
-import { Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Box, Button, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import React, { memo, useEffect } from 'react';
@@ -15,16 +15,39 @@ import { createStructuredSelector } from 'reselect';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import CustomSnackbar from '../HomePage/CustomSnackbar';
-import { changeCloseSnackBar, getList, getCityList } from './actions';
+import { changeCloseSnackBar, getList, getListWidthDebounce, getCityList } from './actions';
+import LinearBuffer from './components/LinearBuffer';
+import { NoDataToShow } from './components/NoDataToShow';
 import StudentFilter from './components/StudentFilter';
 import reducer from './reducer';
 import saga from './saga';
 import makeSelectCity from './selectors';
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    position: 'relative',
+  },
+  titleContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(4),
+  },
+  loading: {
+    position: 'absolute',
+    top: '-8px',
+    width: '100%',
+  },
+}));
+
 export function City(props) {
   useInjectReducer({ key: 'city', reducer });
   useInjectSaga({ key: 'city', saga });
-  const { city, onGetList, onGetCityList, onChangeCloseSnackBar } = props;
+
+  const classes = useStyles();
+
+  const { city, onGetList, onGetListWidthDebounce, onGetCityList, onChangeCloseSnackBar } = props;
   const { localData, localState } = city;
   const { changeSnackBar, filter, pagination, loading } = localState;
   const { studentList, cityList } = localData;
@@ -33,11 +56,23 @@ export function City(props) {
     onGetList();
     onGetCityList();
   }, []);
+  const handleSearchChange = newFilter => {
+    onGetListWidthDebounce(newFilter);
+  };
+  const handleFilterChange = newFilter => {
+    onGetList(newFilter);
+  };
+  const handlePageChange = (e, page) => {
+    onGetList({ ...filter, _page: page });
+  };
+
+  console.log('localState', localState);
   console.log('localData', localData);
   return (
     <>
-      <Box>
-        <StudentFilter cityList={cityList} />
+      <Box className={classes.root}>
+        <StudentFilter cityList={cityList} filter={filter} onSearchChange={handleSearchChange} onChange={handleFilterChange} />
+        {loading && <LinearBuffer className={classes.loading} />}
         <TableContainer>
           <Table aria-label="simple table" size="small">
             <TableHead>
@@ -52,14 +87,16 @@ export function City(props) {
               </TableRow>
             </TableHead>
             <TableBody>
+              {studentList.length === 0 && <NoDataToShow />}
               {studentList.map(student => (
                 <TableRow key={student.id}>
                   <TableCell>{student.id}</TableCell>
-                  <TableCell>{student.name}</TableCell> <TableCell />
+                  <TableCell>{student.name}</TableCell>
+                  <TableCell>{student.gender}</TableCell>
                   <TableCell>
                     <Box fontWeight="bold">{student.mark}</Box>
                   </TableCell>
-                  <TableCell />
+                  <TableCell>{student.city}</TableCell>
                   <TableCell />
                   <TableCell align="right">
                     <Button size="small" color="primary">
@@ -85,7 +122,7 @@ export function City(props) {
             color="primary"
             page={pagination._page}
             count={Math.ceil(pagination._totalRows / pagination._limit)}
-            // onChange={handlePageChange}
+            onChange={handlePageChange}
           />
         </Box>
       </Box>
@@ -111,6 +148,9 @@ function mapDispatchToProps(dispatch) {
   return {
     onGetList: data => {
       dispatch(getList(data));
+    },
+    onGetListWidthDebounce: data => {
+      dispatch(getListWidthDebounce(data));
     },
     onGetCityList: data => {
       dispatch(getCityList(data));
