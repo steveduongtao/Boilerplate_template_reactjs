@@ -41,6 +41,8 @@ export const initialState = {
     cityList: [],
   },
   localState: {
+    // open_dialog
+    open: false,
     filter: {
       _page: 1,
       _limit: 13,
@@ -74,13 +76,11 @@ const cityReducer = (state = initialState, action) =>
           localData: { ...state.localData, ...action.data },
         };
       case GET_LIST:
-        console.log('action_re', action.data);
         return {
           ...state,
           localState: { ...state.localState, loading: true, filter: { ...state.localState.filter, ...action.data } },
         };
       case GET_LIST_DEBOUNCE:
-        console.log('action_re', action.data);
         return {
           ...state,
           localState: { ...state.localState, filter: { ...state.localState.filter, ...action.data } },
@@ -91,14 +91,12 @@ const cityReducer = (state = initialState, action) =>
           localState: { ...state.localState, loading: true },
         };
       case GET_LIST_SUCCESS:
-        console.log('getListSuc_', action);
         return {
           ...state,
           localState: { ...state.localState, loading: false, pagination: action.data.pagination },
           localData: { ...state.localData, studentList: [...action.data.data] },
         };
       case GET_CITY_LIST_SUCCESS:
-        console.log('localData_', action);
         return {
           ...state,
           localData: { ...state.localData, cityList: [...action.data] },

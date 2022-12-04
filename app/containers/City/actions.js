@@ -5,6 +5,8 @@
  */
 
 import {
+  MERGE_DATA,
+  MERGE_STATE,
   CHANGE_CLOSE_SNACKBAR,
   CHANGE_SNACKBAR,
   DEFAULT_ACTION,
@@ -15,13 +17,24 @@ import {
   ON_LINER_BUFFER,
   GET_LIST_FAILURE,
   GET_LIST_SUCCESS,
-  MERGE_DATA,
-  MERGE_STATE,
+  REMOVE_STUDENT,
 } from './constants';
 
 export function defaultAction() {
   return {
     type: DEFAULT_ACTION,
+  };
+}
+export function mergeState(data) {
+  return {
+    type: MERGE_STATE,
+    data,
+  };
+}
+export function mergeData(data) {
+  return {
+    type: MERGE_DATA,
+    data,
   };
 }
 export function getList(data) {
@@ -65,17 +78,8 @@ export function getCityListSuccess(data) {
     data,
   };
 }
-export function mergeState(data) {
-  return {
-    type: MERGE_STATE,
-    data,
-  };
-}
-export function mergeData(data) {
-  return {
-    type: MERGE_DATA,
-    data,
-  };
+export function remove(data) {
+  return { type: REMOVE_STUDENT, data };
 }
 export function changeSnackBar(data) {
   return { type: CHANGE_SNACKBAR, data };

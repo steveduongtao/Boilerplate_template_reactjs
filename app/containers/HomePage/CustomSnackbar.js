@@ -23,7 +23,7 @@ function CustomSnackbar(props) {
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={2000}
         onClose={() => {
           onClose();
         }}

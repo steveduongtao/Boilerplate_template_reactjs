@@ -4,7 +4,7 @@
 import { call, debounce, put, takeLatest } from 'redux-saga/effects';
 import request from '../../utils/request';
 import { changeSnackBar, getCityListSuccess, getListSuccess, onLinerBuffer } from './actions';
-import { GET_CITY_LIST, GET_LIST, GET_LIST_DEBOUNCE } from './constants';
+import { GET_CITY_LIST, GET_LIST, GET_LIST_DEBOUNCE, REMOVE_STUDENT } from './constants';
 
 export function* getList(action) {
   console.log('action_', action);
@@ -49,6 +49,21 @@ export function* getCityList() {
     }
   } catch (err) {}
 }
+export function* removeStudent(action) {
+  const { data } = action;
+  const { id, cb } = data;
+  console.log('data_', action);
+  try {
+    const response = yield call(request, `http://js-post-api.herokuapp.com/api/students/${id}`, {
+      method: 'DELETE',
+    });
+    yield put(changeSnackBar({ open: true, variant: 'success', message: 'Remove student successfully!' }));
+    cb && cb();
+  } catch (err) {
+    yield put(changeSnackBar({ open: false, varriant: 'error', message: 'Remove student failed!' }));
+    console.log('error', err);
+  }
+}
 
 export default function* citySaga() {
   /**Filter */
@@ -56,4 +71,6 @@ export default function* citySaga() {
   yield debounce(500, GET_LIST_DEBOUNCE, getList);
   /**Fetch API */
   yield takeLatest(GET_CITY_LIST, getCityList);
+  /**Remove API */
+  yield takeLatest(REMOVE_STUDENT, removeStudent);
 }

@@ -4,7 +4,7 @@
  *
  */
 
-import { Box, Button, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import React, { memo, useEffect } from 'react';
@@ -15,10 +15,11 @@ import { createStructuredSelector } from 'reselect';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import CustomSnackbar from '../HomePage/CustomSnackbar';
-import { changeCloseSnackBar, getList, getListWidthDebounce, getCityList } from './actions';
+import { changeCloseSnackBar, getCityList, getList, getListWidthDebounce, mergeData, mergeState, remove } from './actions';
 import LinearBuffer from './components/LinearBuffer';
-import { NoDataToShow } from './components/NoDataToShow';
+import RemoveDialog from './components/RemoveDialog';
 import StudentFilter from './components/StudentFilter';
+import StudentTable from './components/StudentTable';
 import reducer from './reducer';
 import saga from './saga';
 import makeSelectCity from './selectors';
@@ -47,13 +48,15 @@ export function City(props) {
 
   const classes = useStyles();
 
-  const { city, onGetList, onGetListWidthDebounce, onGetCityList, onChangeCloseSnackBar } = props;
+  const { city, onMergeState, onMergeData, onGetList, onGetListWidthDebounce, onGetCityList, onRemove, onChangeCloseSnackBar } = props;
   const { localData, localState } = city;
   const { changeSnackBar, filter, pagination, loading } = localState;
   const { studentList, cityList } = localData;
+  console.log('filter_', filter);
 
   useEffect(() => {
-    onGetList();
+    console.log('inuseeffect', filter);
+    onGetList(filter);
     onGetCityList();
   }, []);
   const handleSearchChange = newFilter => {
@@ -65,7 +68,13 @@ export function City(props) {
   const handlePageChange = (e, page) => {
     onGetList({ ...filter, _page: page });
   };
-
+  const handleRemove = id => {
+    onMergeState({ open: false });
+    const cb = () => {
+      onGetList(filter);
+    };
+    onRemove({ id, cb });
+  };
   console.log('localState', localState);
   console.log('localData', localData);
   return (
@@ -73,50 +82,7 @@ export function City(props) {
       <Box className={classes.root}>
         <StudentFilter cityList={cityList} filter={filter} onSearchChange={handleSearchChange} onChange={handleFilterChange} />
         {loading && <LinearBuffer className={classes.loading} />}
-        <TableContainer>
-          <Table aria-label="simple table" size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell width="240px">ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Gender</TableCell>
-                <TableCell>Mark</TableCell>
-                <TableCell>City</TableCell>
-                <TableCell>Ranking</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {studentList.length === 0 && <NoDataToShow />}
-              {studentList.map(student => (
-                <TableRow key={student.id}>
-                  <TableCell>{student.id}</TableCell>
-                  <TableCell>{student.name}</TableCell>
-                  <TableCell>{student.gender}</TableCell>
-                  <TableCell>
-                    <Box fontWeight="bold">{student.mark}</Box>
-                  </TableCell>
-                  <TableCell>{student.city}</TableCell>
-                  <TableCell />
-                  <TableCell align="right">
-                    <Button size="small" color="primary">
-                      Edit
-                    </Button>
-                    <Button
-                      size="small"
-                      color="secondary"
-                      onClick={() => {
-                        // handleRemoveClick(student);
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <StudentTable studentList={studentList} onMergeState={onMergeState} />
         <Box my={2} display="flex" justifyContent="center">
           <Pagination
             color="primary"
@@ -126,12 +92,15 @@ export function City(props) {
           />
         </Box>
       </Box>
-      <CustomSnackbar
-        open={changeSnackBar.open}
-        variant={changeSnackBar.variant}
-        message={changeSnackBar.message}
-        onClose={() => onChangeCloseSnackBar()}
+      {/*Remove Dialog */}
+      <RemoveDialog
+        open={localState.open}
+        onMergeState={onMergeState}
+        onRemove={handleRemove}
+        selectedStudent={localState.selectedStudent}
+        filter={filter}
       />
+      <CustomSnackbar open={changeSnackBar.open} variant={changeSnackBar.variant} message={changeSnackBar.message} onClose={onChangeCloseSnackBar} />
     </>
   );
 }
@@ -146,6 +115,12 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
+    onMergeState: data => {
+      dispatch(mergeState(data));
+    },
+    onMergeData: data => {
+      dispatch(mergeData(data));
+    },
     onGetList: data => {
       dispatch(getList(data));
     },
@@ -154,6 +129,9 @@ function mapDispatchToProps(dispatch) {
     },
     onGetCityList: data => {
       dispatch(getCityList(data));
+    },
+    onRemove: data => {
+      dispatch(remove(data));
     },
     onChangeCloseSnackBar: data => {
       dispatch(changeCloseSnackBar(data));
