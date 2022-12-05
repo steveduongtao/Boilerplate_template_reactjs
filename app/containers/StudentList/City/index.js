@@ -4,17 +4,18 @@
  *
  */
 
-import { Box, makeStyles } from '@material-ui/core';
+import { Box, Button, makeStyles, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import React, { memo, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
-import CustomSnackbar from '../HomePage/CustomSnackbar';
+import CustomSnackbar from '../../HomePage/CustomSnackbar';
 import { changeCloseSnackBar, getCityList, getList, getListWidthDebounce, mergeData, mergeState, remove } from './actions';
 import LinearBuffer from './components/LinearBuffer';
 import RemoveDialog from './components/RemoveDialog';
@@ -75,14 +76,31 @@ export function City(props) {
     };
     onRemove({ id, cb });
   };
+  const handleEditStudent = studentId => {
+    // history.push(`${match.url}/${studentId}`);
+    history.push(`admin/students/${studentId}`);
+  };
+  const history = useHistory();
+  const match = useRouteMatch();
+  console.log('match', match);
+  console.log('history', history);
   console.log('localState', localState);
   console.log('localData', localData);
+
   return (
     <>
       <Box className={classes.root}>
+        <Box className={classes.titleContainer}>
+          <Typography variant="h4">Students</Typography>
+          <Link to="/admin/students/add" style={{ textDecoration: 'none' }}>
+            <Button variant="contained" color="primary">
+              Add new student
+            </Button>
+          </Link>
+        </Box>
         <StudentFilter cityList={cityList} filter={filter} onSearchChange={handleSearchChange} onChange={handleFilterChange} />
         {loading && <LinearBuffer className={classes.loading} />}
-        <StudentTable studentList={studentList} onMergeState={onMergeState} />
+        <StudentTable studentList={studentList} onMergeState={onMergeState} handleEditStudent={handleEditStudent} />
         <Box my={2} display="flex" justifyContent="center">
           <Pagination
             color="primary"

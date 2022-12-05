@@ -13,7 +13,8 @@ import { Switch, Route } from 'react-router-dom';
 
 import HomePage from 'containers/HomePage/Loadable';
 import FeaturePage from 'containers/FeaturePage/Loadable';
-import City from 'containers/City/Loadable';
+import City from 'containers/StudentList/City/Loadable';
+import UpdateStudent from 'containers/StudentList/UpdateStudent/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
@@ -32,10 +33,7 @@ const AppWrapper = styled.div`
 export default function App() {
   return (
     <AppWrapper>
-      <Helmet
-        titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
-      >
+      <Helmet titleTemplate="%s - React.js Boilerplate" defaultTitle="React.js Boilerplate">
         <meta name="description" content="A React.js Boilerplate application" />
       </Helmet>
       <Header />
@@ -43,6 +41,8 @@ export default function App() {
         <Route exact path="/" component={HomePage} />
         <Route path="/features" component={FeaturePage} />
         <Route path="/city" component={City} />
+        <Route path="/admin/students/add" component={UpdateStudent} />
+        <Route path="/admin/students/:studentId" component={UpdateStudent} />
         <Route path="" component={NotFoundPage} />
       </Switch>
       <Footer />

@@ -3,7 +3,7 @@ import React from 'react';
 import { NoDataToShow } from './NoDataToShow';
 
 function StudentTable(props) {
-  const { studentList, onMergeState } = props;
+  const { studentList, onMergeState, handleEditStudent } = props;
   return (
     <TableContainer>
       <Table aria-label="simple table" size="small">
@@ -31,7 +31,13 @@ function StudentTable(props) {
               <TableCell>{student.city}</TableCell>
               <TableCell />
               <TableCell align="right">
-                <Button size="small" color="primary">
+                <Button
+                  size="small"
+                  color="primary"
+                  onClick={() => {
+                    handleEditStudent(student.id);
+                  }}
+                >
                   Edit
                 </Button>
                 <Button

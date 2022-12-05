@@ -1,0 +1,4 @@
+
+> react-boilerplate@4.0.0 generate
+> plop --plopfile internals/generators/index.js
+

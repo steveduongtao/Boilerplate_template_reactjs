@@ -2,7 +2,7 @@
  * Gets the repositories of the user from Github
  */
 import { call, debounce, put, takeLatest } from 'redux-saga/effects';
-import request from '../../utils/request';
+import request from '../../../utils/request';
 import { changeSnackBar, getCityListSuccess, getListSuccess, onLinerBuffer } from './actions';
 import { GET_CITY_LIST, GET_LIST, GET_LIST_DEBOUNCE, REMOVE_STUDENT } from './constants';
 
