@@ -1,18 +1,19 @@
 // import { take, call, put, select } from 'redux-saga/effects';
 
-import { call } from 'file-loader';
-import { takeLatest } from 'redux-saga/effects';
+import { call, takeLatest } from 'redux-saga/effects';
 import request from '../../../utils/request';
 import { getStudentSuccess } from './actions';
 import { GET_STUDENT_INFO } from './constants';
 
 export function* getStudent(action) {
-  const studentId = 'lfajlf';
+  const id = action.data;
+  console.log('studentId', id);
   try {
-    const response = yield call(request, `http://js-post-api.herokuapp.com/api/students/${studentId}`);
-    if (response) {
-      // yield put(getStudentSuccess(response));
-    }
+    const response = yield call(request, `http://js-post-api.herokuapp.com/api/students/${id}`);
+
+    // if (response) {
+    //   yield put(getStudentSuccess(response));
+    // }
   } catch (err) {
     console.log('error', err);
   }

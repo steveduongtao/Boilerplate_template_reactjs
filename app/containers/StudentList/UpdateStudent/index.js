@@ -17,16 +17,24 @@ import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import reducer from './reducer';
 import saga from './saga';
-import { getStudent } from './actions';
+import { defaultAction, getStudent, mergeData, mergeState } from './actions';
 import makeSelectUpdateStudent from './selectors';
+import { useEffect } from 'react';
 
 export function UpdateStudent(props) {
-  const { updateStudent, onGetStudent } = props;
-  const { localData, localState } = updateStudent;
   useInjectReducer({ key: 'updateStudent', reducer });
   useInjectSaga({ key: 'updateStudent', saga });
+  const { updateStudent, onGetStudent } = props;
+  const { localData, localState } = updateStudent;
   const { studentId } = useParams();
   const isEdit = Boolean(studentId);
+
+  useEffect(() => {
+    if (!studentId) return;
+    onGetStudent(studentId);
+  }, [studentId]);
+
+  console.log('localData_', localData);
 
   return (
     <Box>
@@ -51,6 +59,15 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
+    onDefaultAction: data => {
+      dispatch(defaultAction(data));
+    },
+    onMergeState: data => {
+      dispatch(mergeState(data));
+    },
+    onMergeData: data => {
+      dispatch(mergeData(data));
+    },
     onGetStudent: data => {
       dispatch(getStudent(data));
     },
