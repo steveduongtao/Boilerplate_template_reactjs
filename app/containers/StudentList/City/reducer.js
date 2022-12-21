@@ -60,7 +60,6 @@ export const initialState = {
     },
   },
 };
-
 /* eslint-disable default-case, no-param-reassign */
 const cityReducer = (state = initialState, action) =>
   produce(state, (/* draft */) => {
@@ -75,15 +74,32 @@ const cityReducer = (state = initialState, action) =>
           ...state,
           localData: { ...state.localData, ...action.data },
         };
+      case MERGE_STATE:
+        return {
+          ...state,
+          localState: { ...state.localState, ...action.data },
+        };
+      case MERGE_DATA:
+        return {
+          ...state,
+          localData: { ...state.localData, ...action.data },
+        };
       case GET_LIST:
         return {
           ...state,
-          localState: { ...state.localState, loading: true, filter: { ...state.localState.filter, ...action.data } },
+          localState: {
+            ...state.localState,
+            loading: true,
+            filter: { ...state.localState.filter, ...action.data },
+          },
         };
       case GET_LIST_DEBOUNCE:
         return {
           ...state,
-          localState: { ...state.localState, filter: { ...state.localState.filter, ...action.data } },
+          localState: {
+            ...state.localState,
+            filter: { ...state.localState.filter, ...action.data },
+          },
         };
       case ON_LINER_BUFFER:
         return {

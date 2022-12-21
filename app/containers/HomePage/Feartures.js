@@ -5,6 +5,7 @@ import { DownloadExcel } from '../DownloadExcel';
 import { DownloadFile } from '../DownloadFile';
 import ExportPdFv2 from '../ExportPdFv2';
 import JsonToExcel from '../JsonToExcel';
+import LightboxView from '../LightboxView';
 import PreviewPdf from '../PreviewPdf';
 import PrintCurrentTab from '../PrintCurrentTab';
 import { PrintPdf } from '../PrintPdf';
@@ -70,13 +71,11 @@ function Feartures(props) {
       />
       <UploadExcel />
       <PrintCurrentTab />
-      <ExportPdFv2
-        localState={localState}
-        onMergeState={data => onMergeState(data)}
-      />
+      <ExportPdFv2 localState={localState} onMergeState={data => onMergeState(data)} />
       <DownloadFile />
       <JsonToExcel />
       <Divider />
+      <LightboxView />
 
       {/* {<ExportTableToExcel id={'table1'} />} */}
     </>

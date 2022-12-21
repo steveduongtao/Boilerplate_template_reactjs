@@ -16,7 +16,15 @@ import { createStructuredSelector } from 'reselect';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import CustomSnackbar from '../../HomePage/CustomSnackbar';
-import { changeCloseSnackBar, getCityList, getList, getListWidthDebounce, mergeData, mergeState, remove } from './actions';
+import {
+  changeCloseSnackBar,
+  getCityList,
+  getList,
+  getListWidthDebounce,
+  mergeData,
+  mergeState,
+  remove,
+} from './actions';
 import LinearBuffer from './components/LinearBuffer';
 import RemoveDialog from './components/RemoveDialog';
 import StudentFilter from './components/StudentFilter';
@@ -49,7 +57,16 @@ export function City(props) {
 
   const classes = useStyles();
 
-  const { city, onMergeState, onMergeData, onGetList, onGetListWidthDebounce, onGetCityList, onRemove, onChangeCloseSnackBar } = props;
+  const {
+    city,
+    onMergeState,
+    onMergeData,
+    onGetList,
+    onGetListWidthDebounce,
+    onGetCityList,
+    onRemove,
+    onChangeCloseSnackBar,
+  } = props;
   const { localData, localState } = city;
   const { changeSnackBar, filter, pagination, loading } = localState;
   const { studentList, cityList } = localData;
@@ -98,9 +115,18 @@ export function City(props) {
             </Button>
           </Link>
         </Box>
-        <StudentFilter cityList={cityList} filter={filter} onSearchChange={handleSearchChange} onChange={handleFilterChange} />
+        <StudentFilter
+          cityList={cityList}
+          filter={filter}
+          onSearchChange={handleSearchChange}
+          onChange={handleFilterChange}
+        />
         {loading && <LinearBuffer className={classes.loading} />}
-        <StudentTable studentList={studentList} onMergeState={onMergeState} handleEditStudent={handleEditStudent} />
+        <StudentTable
+          studentList={studentList}
+          onMergeState={onMergeState}
+          handleEditStudent={handleEditStudent}
+        />
         <Box my={2} display="flex" justifyContent="center">
           <Pagination
             color="primary"
@@ -118,7 +144,12 @@ export function City(props) {
         selectedStudent={localState.selectedStudent}
         filter={filter}
       />
-      <CustomSnackbar open={changeSnackBar.open} variant={changeSnackBar.variant} message={changeSnackBar.message} onClose={onChangeCloseSnackBar} />
+      <CustomSnackbar
+        open={changeSnackBar.open}
+        variant={changeSnackBar.variant}
+        message={changeSnackBar.message}
+        onClose={onChangeCloseSnackBar}
+      />
     </>
   );
 }

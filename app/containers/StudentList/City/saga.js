@@ -19,9 +19,11 @@ export function* getList(action) {
     yield put(onLinerBuffer());
     const response = yield call(
       request,
-      `https://js-post-api.herokuapp.com/api/students?_page=${_page}&_limit=13${city ? `&city=${city}` : ''}${_sort ? `&_sort=${_sort}` : ''}${
-        _order ? `&_order=${_order}` : ''
-      }${name_like ? `&name_like=${name_like}` : ''}`,
+      `https://js-post-api.herokuapp.com/api/students?_page=${_page}&_limit=13${
+        city ? `&city=${city}` : ''
+      }${_sort ? `&_sort=${_sort}` : ''}${_order ? `&_order=${_order}` : ''}${
+        name_like ? `&name_like=${name_like}` : ''
+      }`,
     );
     console.log('data', response.data);
     if (response) {
@@ -30,7 +32,13 @@ export function* getList(action) {
       yield put(getListSuccess(response));
     } else {
       // yield put(mergeState({ isLoading: false }));
-      yield put(changeSnackBar({ open: true, variant: 'warning', message: 'Not found ! Please type again!' }));
+      yield put(
+        changeSnackBar({
+          open: true,
+          variant: 'warning',
+          message: 'Not found ! Please type again!',
+        }),
+      );
     }
   } catch (err) {
     //
@@ -39,13 +47,22 @@ export function* getList(action) {
 
 export function* getCityList() {
   try {
-    const response = yield call(request, 'http://js-post-api.herokuapp.com/api/cities?_page=1&_limit=10');
+    const response = yield call(
+      request,
+      'http://js-post-api.herokuapp.com/api/cities?_page=1&_limit=10',
+    );
     console.log('cityList_', response);
     if (response.data.length > 0) {
       yield put(changeSnackBar({ open: true, variant: 'success', message: 'Call API success !' }));
       yield put(getCityListSuccess(response.data));
     } else {
-      yield put(changeSnackBar({ open: false, varriant: 'warning', message: 'Not found ! Please type again!' }));
+      yield put(
+        changeSnackBar({
+          open: true,
+          variant: 'warning',
+          message: 'Not found ! Please type again!',
+        }),
+      );
     }
   } catch (err) {}
 }
@@ -57,10 +74,14 @@ export function* removeStudent(action) {
     const response = yield call(request, `http://js-post-api.herokuapp.com/api/students/${id}`, {
       method: 'DELETE',
     });
-    yield put(changeSnackBar({ open: true, variant: 'success', message: 'Remove student successfully!' }));
+    yield put(
+      changeSnackBar({ open: true, variant: 'success', message: 'Remove student successfully!' }),
+    );
     cb && cb();
   } catch (err) {
-    yield put(changeSnackBar({ open: false, varriant: 'error', message: 'Remove student failed!' }));
+    yield put(
+      changeSnackBar({ open: false, varriant: 'error', message: 'Remove student failed!' }),
+    );
     console.log('error', err);
   }
 }

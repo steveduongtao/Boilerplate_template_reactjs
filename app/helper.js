@@ -557,7 +557,6 @@ export function exportPDFhtml2pdf(cb) {
     image: { type: 'jpeg', quality: 2 },
     html2canvas: { scale: 2, letterRendering: true },
     jsPDF: { unit: 'pt', format: 'A4', orientation: 'portrait' },
-    // pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
   };
 
