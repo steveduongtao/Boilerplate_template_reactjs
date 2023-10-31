@@ -70,9 +70,7 @@ export function DownloadFile() {
   }
   // need to use useEffect
   useEffect(() => {
-    document
-      .getElementById('fileinput')
-      .addEventListener('change', readSingleFile, false);
+    document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
   }, []);
   /**
    * getMimetype finns som egen fil under istools2/mimetypes.js
@@ -153,43 +151,35 @@ export function DownloadFile() {
         break;
       case '.pptx':
         // Microsoft Office - OOXML - Presentation
-        mimetype =
-          'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+        mimetype = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
         break;
       case '.sldx':
         // Microsoft Office - OOXML - Presentation (Slide)
-        mimetype =
-          'application/vnd.openxmlformats-officedocument.presentationml.slide';
+        mimetype = 'application/vnd.openxmlformats-officedocument.presentationml.slide';
         break;
       case '.ppsx':
         // Microsoft Office - OOXML - Presentation (Slideshow)
-        mimetype =
-          'application/vnd.openxmlformats-officedocument.presentationml.slideshow';
+        mimetype = 'application/vnd.openxmlformats-officedocument.presentationml.slideshow';
         break;
       case '.potx':
         // Microsoft Office - OOXML - Presentation Template
-        mimetype =
-          'application/vnd.openxmlformats-officedocument.presentationml.template';
+        mimetype = 'application/vnd.openxmlformats-officedocument.presentationml.template';
         break;
       case '.xlsx':
         // Microsoft Office - OOXML - Spreadsheet
-        mimetype =
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         break;
       case '.xltx':
         // Microsoft Office - OOXML - Spreadsheet Teplate
-        mimetype =
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.template';
+        mimetype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.template';
         break;
       case '.docx':
         // Microsoft Office - OOXML - Word Document
-        mimetype =
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        mimetype = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
         break;
       case '.dotx':
         // Microsoft Office - OOXML - Word Document Template
-        mimetype =
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.template';
+        mimetype = 'application/vnd.openxmlformats-officedocument.wordprocessingml.template';
         break;
       case '.ppt':
         // Microsoft PowerPoint
@@ -322,8 +312,7 @@ export function DownloadFile() {
         break;
       case '.air':
         // Adobe AIR Application
-        mimetype =
-          'application/vnd.adobe.air-application-installer-package+zip';
+        mimetype = 'application/vnd.adobe.air-application-installer-package+zip';
         break;
       case '.swf':
         // Adobe Flash
@@ -2828,12 +2817,7 @@ export function DownloadFile() {
           <InputIcon fontSize="large" />
         </Button>
       </Tooltip>
-      <input
-        ref={inputEl}
-        type="file"
-        id="fileinput"
-        style={{ display: 'none' }}
-      />
+      <input ref={inputEl} type="file" id="fileinput" style={{ display: 'none' }} />
       <span>
         <a id="download" download />
       </span>

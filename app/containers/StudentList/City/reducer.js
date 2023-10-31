@@ -67,22 +67,18 @@ const cityReducer = (state = initialState, action) =>
       case MERGE_STATE:
         return {
           ...state,
-          localState: { ...state.localState, ...action.data },
+          localState: {
+            ...state.localState,
+            ...action.data,
+          },
         };
       case MERGE_DATA:
         return {
           ...state,
-          localData: { ...state.localData, ...action.data },
-        };
-      case MERGE_STATE:
-        return {
-          ...state,
-          localState: { ...state.localState, ...action.data },
-        };
-      case MERGE_DATA:
-        return {
-          ...state,
-          localData: { ...state.localData, ...action.data },
+          localData: {
+            ...state.localData,
+            ...action.data,
+          },
         };
       case GET_LIST:
         return {
@@ -90,7 +86,10 @@ const cityReducer = (state = initialState, action) =>
           localState: {
             ...state.localState,
             loading: true,
-            filter: { ...state.localState.filter, ...action.data },
+            filter: {
+              ...state.localState.filter,
+              ...action.data,
+            },
           },
         };
       case GET_LIST_DEBOUNCE:
@@ -98,26 +97,41 @@ const cityReducer = (state = initialState, action) =>
           ...state,
           localState: {
             ...state.localState,
-            filter: { ...state.localState.filter, ...action.data },
+            filter: {
+              ...state.localState.filter,
+              ...action.data,
+            },
           },
         };
       case ON_LINER_BUFFER:
         return {
           ...state,
-          localState: { ...state.localState, loading: true },
+          localState: {
+            ...state.localState,
+            loading: true,
+          },
         };
       case GET_LIST_SUCCESS:
         return {
           ...state,
-          localState: { ...state.localState, loading: false, pagination: action.data.pagination },
-          localData: { ...state.localData, studentList: [...action.data.data] },
+          localState: {
+            ...state.localState,
+            loading: false,
+            pagination: action.data.pagination,
+          },
+          localData: {
+            ...state.localData,
+            studentList: [...action.data.data],
+          },
         };
       case GET_CITY_LIST_SUCCESS:
         return {
           ...state,
-          localData: { ...state.localData, cityList: [...action.data] },
+          localData: {
+            ...state.localData,
+            cityList: [...action.data],
+          },
         };
-
       case DEFAULT_ACTION:
         break;
       case CHANGE_SNACKBAR:

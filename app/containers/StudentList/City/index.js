@@ -4,7 +4,7 @@
  *
  */
 
-import { Box, Button, makeStyles, Typography } from '@material-ui/core';
+import { Box, Button, Divider, makeStyles, Typography } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import React, { memo, useEffect } from 'react';
@@ -32,6 +32,7 @@ import StudentTable from './components/StudentTable';
 import reducer from './reducer';
 import saga from './saga';
 import makeSelectCity from './selectors';
+import EnhancedTable from './components/StudentTableSort';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -70,13 +71,12 @@ export function City(props) {
   const { localData, localState } = city;
   const { changeSnackBar, filter, pagination, loading } = localState;
   const { studentList, cityList } = localData;
-  console.log('filter_', filter);
 
   useEffect(() => {
-    console.log('inuseeffect', filter);
     onGetList(filter);
     onGetCityList();
   }, []);
+
   const handleSearchChange = newFilter => {
     onGetListWidthDebounce(newFilter);
   };
@@ -99,11 +99,6 @@ export function City(props) {
   };
   const history = useHistory();
   const match = useRouteMatch();
-  console.log('match', match);
-  console.log('history', history);
-  console.log('localState', localState);
-  console.log('localData', localData);
-
   return (
     <>
       <Box className={classes.root}>
@@ -127,7 +122,7 @@ export function City(props) {
           onMergeState={onMergeState}
           handleEditStudent={handleEditStudent}
         />
-        <Box my={2} display="flex" justifyContent="center">
+        <Box m={2} display="flex" justifyContent="center">
           <Pagination
             color="primary"
             page={pagination._page}
@@ -136,7 +131,14 @@ export function City(props) {
           />
         </Box>
       </Box>
-      {/*Remove Dialog */}
+      <Divider />
+      {/* Student table sort */}
+      <EnhancedTable
+        studentList={studentList}
+        onMergeState={onMergeState}
+        handleEditStudent={handleEditStudent}
+      />
+      {/* Remove Dialog */}
       <RemoveDialog
         open={localState.open}
         onMergeState={onMergeState}

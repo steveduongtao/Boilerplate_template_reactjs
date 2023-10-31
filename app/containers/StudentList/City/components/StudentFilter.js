@@ -1,8 +1,16 @@
-import { Box, Button, FormControl, Grid, InputLabel, makeStyles, MenuItem, OutlinedInput, Select } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  makeStyles,
+  MenuItem,
+  OutlinedInput,
+  Select,
+} from '@material-ui/core';
 import { Search } from '@material-ui/icons';
-import { filter } from 'lodash';
 import React from 'react';
-import { City } from '..';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,6 +21,7 @@ const useStyles = makeStyles(theme => ({
 function StudentFilter(props) {
   const classes = useStyles();
   const { cityList, filter, onChange, onSearchChange } = props;
+  console.log('_filterStudent rerender');
   const handleSearchChange = e => {
     const newFilter = {
       ...filter,
@@ -31,7 +40,7 @@ function StudentFilter(props) {
     onChange(newFilter);
   };
   const handleSortChange = e => {
-    const value = e.target.value;
+    const { value } = e.target;
     const [_sort, _order] = value.split('.');
     const newFilter = {
       ...filter,
@@ -55,6 +64,7 @@ function StudentFilter(props) {
   return (
     <Box className={classes.root}>
       <Grid container spacing={3}>
+        {/* Filter by search key word */}
         <Grid item xs={12} md={6}>
           <FormControl fullWidth variant="outlined" size="small">
             <InputLabel htmlFor="searchByName">Search by name</InputLabel>
@@ -71,7 +81,13 @@ function StudentFilter(props) {
         <Grid item xs={12} md={3}>
           <FormControl fullWidth variant="outlined" size="small">
             <InputLabel id="filterByCity">Filter by city</InputLabel>
-            <Select labelId="filterByCity" id="filterByCity-select" label="Filter by city" onChange={handleCityChange} value={filter.city || ''}>
+            <Select
+              labelId="filterByCity"
+              id="filterByCity-select"
+              label="Filter by city"
+              onChange={handleCityChange}
+              value={filter.city || ''}
+            >
               <MenuItem value="">
                 <em>All</em>
               </MenuItem>
@@ -104,7 +120,7 @@ function StudentFilter(props) {
             </Select>
           </FormControl>
         </Grid>
-        {/* Clear*/}
+        {/* Clear */}
         <Grid item xs={12} md={1}>
           <Button variant="outlined" color="primary" fullWidth onClick={handleClearFilter}>
             Clear

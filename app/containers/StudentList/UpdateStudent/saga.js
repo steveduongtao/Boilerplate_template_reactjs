@@ -39,23 +39,46 @@ export function* getCityList(action) {
   }
 }
 export function* addStudent(action) {
-  console.log('action_add', action);
+  console.log('action_add', action.data);
+  const { cd, rest } = action.data;
   try {
     const response = yield call(request, `http://js-post-api.herokuapp.com/api/students`, {
       method: 'POST',
-      body: JSON.stringify({ data }),
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(rest),
     });
+    if (response) {
+      console.log('response_');
+      /** Redirect to city list */
+      cd();
+    }
   } catch (err) {
     console.log('error', err);
   }
 }
 export function* updateStudent(action) {
-  console.log('action_update', action);
+  console.log('action_update', action.data);
+  const { cd } = action.data;
+  const { id, ...rest } = action.data.formValues;
+  console.log('id_', id, rest);
   try {
     const response = yield call(request, `http://js-post-api.herokuapp.com/api/students/${id}`, {
       method: 'PATCH',
-      body: JSON.stringify({ data }),
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...rest }),
     });
+
+    if (response) {
+      console.log('response_');
+      /** Redirect to city list */
+      cd();
+    }
   } catch (err) {
     console.log('error', err);
   }
@@ -63,12 +86,12 @@ export function* updateStudent(action) {
 
 // Individual exports for testing
 export default function* updateStudentSaga() {
-  /**Get student info */
+  /** Get student info */
   yield takeLatest(GET_STUDENT_INFO, getStudent);
-  /**Get city list */
+  /** Get city list */
   yield takeLatest(GET_CITY_LIST, getCityList);
-  /**Add student */
+  /** Add student */
   yield takeLatest(ADD_STUDENT, addStudent);
-  /**Update student */
+  /** Update student */
   yield takeLatest(UPDATE_STUDENT, updateStudent);
 }

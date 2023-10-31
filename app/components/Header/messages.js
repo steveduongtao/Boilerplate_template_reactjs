@@ -20,4 +20,8 @@ export default defineMessages({
     id: `${scope}.city`,
     defaultMessage: 'City',
   },
+  lazyLoading: {
+    id: `${scope}.city`,
+    defaultMessage: 'LazyLoading',
+  },
 });

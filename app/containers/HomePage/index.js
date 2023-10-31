@@ -23,7 +23,6 @@ import {
   onChangeCloseSnackBar,
 } from './actions';
 import CustomSnackbar from './CustomSnackbar';
-lìeDrive;
 import Feartures from './Feartures';
 import Loading from './Loading/Loading';
 import reducer from './reducer';
@@ -54,7 +53,7 @@ export function HomePage(props) {
 
   const { localState } = homePage;
   const { changeSnackbar, isLoading } = localState;
-
+  console.log('homePage_');
   useEffect(() => {
     // When initial state username is not null, submit the form to load repos
     if (username && username.trim().length > 0) onSubmitForm();

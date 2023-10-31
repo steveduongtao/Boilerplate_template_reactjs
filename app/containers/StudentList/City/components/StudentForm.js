@@ -1,9 +1,9 @@
 import { Box, Button } from '@material-ui/core';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { InputField, RadioGroupField, SelectField } from '../../../../components/FormFields';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { InputField, RadioGroupField, SelectField } from '../../../../components/FormFields';
 
 const schema = yup
   .object({
@@ -47,7 +47,6 @@ function StudentForm(props) {
   });
   const handleFormSubmit = formValues => {
     onSubmit(formValues);
-    console.log('Submit_', formValues);
   };
   return (
     <Box maxWidth={400}>

@@ -10,8 +10,8 @@ To get the best editing experience with [VS Code](https://code.visualstudio.com)
 {
   "compilerOptions": {
     "baseUrl": "app",
-    "module": "commonjs",
-    "target": "es2016",
+    "module": "es2020",
+    "target": "es6",
     "jsx": "react"
   },
   "exclude": ["node_modules", "**/node_modules/*"]

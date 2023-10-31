@@ -5,15 +5,15 @@
  */
 
 import PropTypes from 'prop-types';
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { connect, useSelector } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
 import { Box, Typography } from '@material-ui/core';
 import { ChevronLeft } from '@material-ui/icons';
-import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import StudentForm from '../City/components/StudentForm';
@@ -47,6 +47,7 @@ export function UpdateStudent(props) {
   } = props;
   const { localData, localState } = updateStudent;
   const { studentId } = useParams();
+  const history = useHistory();
   const isEdit = Boolean(studentId);
 
   useEffect(() => {
@@ -60,18 +61,20 @@ export function UpdateStudent(props) {
     onGetCityList();
   }, []);
 
-  const handleStudentFormSubmit = async formValues => {
-    // if(isEdit) {
-    //   await onUpdateStudent(formValues)
-    // }
+  const cd = () => history.push('/city');
 
-    console.log('formValues', formValues);
+  const handleStudentFormSubmit = async formValues => {
+    const { cityOptions, ...rest } = formValues;
+    if (isEdit) {
+      await onUpdateStudent({ formValues, cd });
+    } else {
+      await onAddStudent({ rest, cd });
+    }
   };
+
   // const cityOptions = useSelector(makeSelectCity);
+
   const cityOptions = makeSelectCity;
-  console.log('localData_', localData);
-  console.log('selectCityDomain', cityOptions());
-  console.log('location', location);
 
   return (
     <Box>
@@ -80,7 +83,6 @@ export function UpdateStudent(props) {
           <ChevronLeft /> Back to student list
         </Typography>
       </Link>
-
       <Typography variant="h4">{isEdit ? 'Update student info' : 'Add new student'}</Typography>
       {(!isEdit || Boolean(localData.createdAt)) && (
         <Box mt={3}>
